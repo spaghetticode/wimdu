@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe Album do
+  it 'successully creates album' do
+    expect { FactoryGirl.create(:album) }.to_not raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it 'requires a title' do
     FactoryGirl.build(:album, title: '').should have_at_least(1).error_on(:title)
   end

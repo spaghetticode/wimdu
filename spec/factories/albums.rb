@@ -8,5 +8,6 @@ FactoryGirl.define do
   factory :album do
     title
     author 'Belle and Sebastian'
+    association :user
   end
 end

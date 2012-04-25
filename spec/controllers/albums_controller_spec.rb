@@ -19,14 +19,6 @@ require 'spec_helper'
 # that an instance is receiving a specific message.
 
 describe AlbumsController do
-
-  # This should return the minimal set of attributes required to create a valid
-  # Album. As you add validations to Album, be sure to
-  # update the return value of this method accordingly.
-  def valid_attributes
-    {}
-  end
-  
   # This should return the minimal set of values that should be in the session
   # in order to pass any filters (e.g. authentication) defined in
   # AlbumsController. Be sure to keep this updated too.
@@ -34,9 +26,15 @@ describe AlbumsController do
     {}
   end
 
+  let(:user) {FactoryGirl.create(:user)}
+
+  before do
+    sign_in user
+  end
+
   describe "GET index" do
     it "assigns all albums as @albums" do
-      album = Album.create! valid_attributes
+      album = FactoryGirl.create(:album)
       get :index, {}, valid_session
       assigns(:albums).should eq([album])
     end
@@ -44,7 +42,7 @@ describe AlbumsController do
 
   describe "GET show" do
     it "assigns the requested album as @album" do
-      album = Album.create! valid_attributes
+      album = FactoryGirl.create(:album)
       get :show, {:id => album.to_param}, valid_session
       assigns(:album).should eq(album)
     end
@@ -59,7 +57,7 @@ describe AlbumsController do
 
   describe "GET edit" do
     it "assigns the requested album as @album" do
-      album = Album.create! valid_attributes
+      album = FactoryGirl.create(:album)
       get :edit, {:id => album.to_param}, valid_session
       assigns(:album).should eq(album)
     end
@@ -69,18 +67,18 @@ describe AlbumsController do
     describe "with valid params" do
       it "creates a new Album" do
         expect {
-          post :create, {:album => valid_attributes}, valid_session
+          post :create, {:album => album = FactoryGirl.attributes_for(:album)}, valid_session
         }.to change(Album, :count).by(1)
       end
 
       it "assigns a newly created album as @album" do
-        post :create, {:album => valid_attributes}, valid_session
+        post :create, {:album => album = FactoryGirl.attributes_for(:album)}, valid_session
         assigns(:album).should be_a(Album)
         assigns(:album).should be_persisted
       end
 
       it "redirects to the created album" do
-        post :create, {:album => valid_attributes}, valid_session
+        post :create, {:album => album = FactoryGirl.attributes_for(:album)}, valid_session
         response.should redirect_to(Album.last)
       end
     end
@@ -121,7 +119,7 @@ describe AlbumsController do
       end
 
       it "redirects to the album" do
-        album = Album.create! valid_attributes
+        album = FactoryGirl.create(:album)
         put :update, {:id => album.to_param, :album => valid_attributes}, valid_session
         response.should redirect_to(album)
       end
@@ -129,7 +127,7 @@ describe AlbumsController do
 
     describe "with invalid params" do
       it "assigns the album as @album" do
-        album = Album.create! valid_attributes
+        album = FactoryGirl.create(:album)
         # Trigger the behavior that occurs when invalid params are submitted
         Album.any_instance.stub(:save).and_return(false)
         put :update, {:id => album.to_param, :album => {}}, valid_session
@@ -137,7 +135,7 @@ describe AlbumsController do
       end
 
       it "re-renders the 'edit' template" do
-        album = Album.create! valid_attributes
+        album = FactoryGirl.create(:album)
         # Trigger the behavior that occurs when invalid params are submitted
         Album.any_instance.stub(:save).and_return(false)
         put :update, {:id => album.to_param, :album => {}}, valid_session
@@ -148,14 +146,14 @@ describe AlbumsController do
 
   describe "DELETE destroy" do
     it "destroys the requested album" do
-      album = Album.create! valid_attributes
+      album = FactoryGirl.create(:album)
       expect {
         delete :destroy, {:id => album.to_param}, valid_session
       }.to change(Album, :count).by(-1)
     end
 
     it "redirects to the albums list" do
-      album = Album.create! valid_attributes
+      album = FactoryGirl.create(:album)
       delete :destroy, {:id => album.to_param}, valid_session
       response.should redirect_to(albums_url)
     end
